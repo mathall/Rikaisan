@@ -1,7 +1,12 @@
 /*
 
-	Rikaikun
-	Copyright (C) 2010 Erek Speed
+	Rikaisan
+	Copyright (C) 2012 Mathias Hällman
+
+	---
+
+	Originally based on Rikaikun 0.8.5
+	by Erek Speed
 	http://code.google.com/p/rikaikun/
 	
 	---
@@ -46,19 +51,19 @@ var rcxContent = {
 	
 	//Adds the listeners and stuff.
 	enableTab: function() {
-		if (window.rikaichan == null) {
-			window.rikaichan = {};
-			window.addEventListener('mousemove', this.onMouseMove, false);
-			window.addEventListener('keydown', this.onKeyDown, true);
-			window.addEventListener('keyup', this.onKeyUp, true);
-			window.addEventListener('mousedown', this.onMouseDown, false);
-			window.addEventListener('mouseup', this.onMouseUp, false);
+		if (window.rikaisan == null) {
+			window.rikaisan = {};
+		//	window.addEventListener('mousemove', this.onMouseMove, false);
+		//	window.addEventListener('keydown', this.onKeyDown, true);
+		//	window.addEventListener('keyup', this.onKeyUp, true);
+		//	window.addEventListener('mousedown', this.onMouseDown, false);
+		//	window.addEventListener('mouseup', this.onMouseUp, false);
 		}
 	},
 	
 	//Removes the listeners and stuff
 	disableTab: function() {
-		if(window.rikaichan != null) {
+		if(window.rikaisan != null) {
 			var e;
 			window.removeEventListener('mousemove', this.onMouseMove, false);
 			window.removeEventListener('keydown', this.onKeyDown, true);
@@ -66,13 +71,13 @@ var rcxContent = {
 			window.removeEventListener('mosuedown', this.onMouseDown, false);
 			window.removeEventListener('mouseup', this.onMouseUp, false);
 
-			e = document.getElementById('rikaichan-css');
+			e = document.getElementById('rikaisan-css');
 			if (e) e.parentNode.removeChild(e);
-			e = document.getElementById('rikaichan-window');
+			e = document.getElementById('rikaisan-window');
 			if (e) e.parentNode.removeChild(e);
 
 			this.clearHi();
-			delete window.rikaichan;
+			delete window.rikaisan;
 		}
 	},
 	
@@ -94,19 +99,19 @@ var rcxContent = {
 		if ((isNaN(x)) || (isNaN(y))) x = y = 0;
 
 
-		var popup = topdoc.getElementById('rikaichan-window');
+		var popup = topdoc.getElementById('rikaisan-window');
 		if (!popup) {
 			var css = topdoc.createElementNS('http://www.w3.org/1999/xhtml', 'link');
 			css.setAttribute('rel', 'stylesheet');
 			css.setAttribute('type', 'text/css');
-			var cssdoc = window.rikaichan.config.css;
+			var cssdoc = window.rikaisan.config.css;
 			css.setAttribute('href', chrome.extension.getURL('css/popup-' + 
 																cssdoc + '.css'));
-			css.setAttribute('id', 'rikaichan-css');
+			css.setAttribute('id', 'rikaisan-css');
 			topdoc.getElementsByTagName('head')[0].appendChild(css);
 
 			popup = topdoc.createElementNS('http://www.w3.org/1999/xhtml', 'div');
-			popup.setAttribute('id', 'rikaichan-window');
+			popup.setAttribute('id', 'rikaisan-window');
 			topdoc.documentElement.appendChild(popup);
 
 			popup.addEventListener('dblclick',
@@ -251,7 +256,7 @@ var rcxContent = {
 	},
 	
 	hidePopup: function() {
-		var popup = document.getElementById('rikaichan-window');
+		var popup = document.getElementById('rikaisan-window');
 		if (popup) {
 			popup.style.display = 'none';
 			popup.innerHTML = '';
@@ -260,12 +265,12 @@ var rcxContent = {
 	},
 	
 	isVisible: function() {
-		var popup = document.getElementById('rikaichan-window');
+		var popup = document.getElementById('rikaisan-window');
 		return (popup) && (popup.style.display != 'none');
 	},
 
 	clearHi: function() {
-		var tdata = window.rikaichan;
+		var tdata = window.rikaisan;
 		if ((!tdata) || (!tdata.prevSelView)) return;
 		if (tdata.prevSelView.closed) {
 			tdata.prevSelView = null;
@@ -348,7 +353,7 @@ var rcxContent = {
 	},
 */	
 	configPage: function() {
-		window.openDialog('chrome://rikaichan/content/prefs.xul', '', 'chrome,centerscreen');
+		window.openDialog('chrome://rikaisan/content/prefs.xul', '', 'chrome,centerscreen');
 	},
 	
 	keysDown: [],
@@ -369,7 +374,7 @@ var rcxContent = {
 		case 16:	// shift
 		case 13:	// enter
 			this.showMode = (this.showMode + 1) % this.dictCount;
-			this.show(ev.currentTarget.rikaichan);
+			this.show(ev.currentTarget.rikaisan);
 			break;
 		case 27:	// esc
 			this.hidePopup();
@@ -377,34 +382,34 @@ var rcxContent = {
 			break;
 		case 65:	// a
 			this.altView = (this.altView + 1) % 3;
-			this.show(ev.currentTarget.rikaichan);
+			this.show(ev.currentTarget.rikaisan);
 			break;
 		case 67:	// c
 			this.copyToClip();
 			break;
 		case 66:	// b
-			var ofs = ev.currentTarget.rikaichan.uofs;
+			var ofs = ev.currentTarget.rikaisan.uofs;
 			for (i = 50; i > 0; --i) {
-				ev.currentTarget.rikaichan.uofs = --ofs;
+				ev.currentTarget.rikaisan.uofs = --ofs;
 				this.showMode = 0;
-				if (this.show(ev.currentTarget.rikaichan) >= 0) {
-					if (ofs >= ev.currentTarget.rikaichan.uofs) break;	// ! change later
+				if (this.show(ev.currentTarget.rikaisan) >= 0) {
+					if (ofs >= ev.currentTarget.rikaisan.uofs) break;	// ! change later
 				}
 			}
 			break;
 		case 77:	// m
-			ev.currentTarget.rikaichan.uofsNext = 1;
+			ev.currentTarget.rikaisan.uofsNext = 1;
 		case 78:	// n
 			for (i = 50; i > 0; --i) {
-				ev.currentTarget.rikaichan.uofs += ev.currentTarget.rikaichan.uofsNext;
+				ev.currentTarget.rikaisan.uofs += ev.currentTarget.rikaichan.uofsNext;
 				this.showMode = 0;
-				if (this.show(ev.currentTarget.rikaichan) >= 0) break;
+				if (this.show(ev.currentTarget.rikaisan) >= 0) break;
 			}
 			break;
 		case 89:	// y
 			this.altView = 0;
-			ev.currentTarget.rikaichan.popY += 20;
-			this.show(ev.currentTarget.rikaichan);
+			ev.currentTarget.rikaisan.popY += 20;
+			this.show(ev.currentTarget.rikaisan);
 			break;
 		default:
 			return;
@@ -433,9 +438,9 @@ var rcxContent = {
 		// Otherwise, we switch our saved textarea to whereever
 		// we just clicked
 		if(!('form' in ev.target))
-		    window.rikaichan.oldCaret =  -1;
+		    window.rikaisan.oldCaret =  -1;
 		else
-		    window.rikaichan.oldTA = ev.target;
+		    window.rikaisan.oldTA = ev.target;
 	},
 	
 	onMouseUp: function(ev) { rcxContent._onMouseUp(ev) },
@@ -509,12 +514,12 @@ var rcxContent = {
 	},
 
 	// XPath expression which evaluates to text nodes
-	// tells rikaichan which text to translate
+	// tells rikaisan which text to translate
 	// expression to get all text nodes that are not in (RP or RT) elements
 	textNodeExpr: 'descendant-or-self::text()[not(parent::rp) and not(ancestor::rt)]',
 
 	// XPath expression which evaluates to a boolean. If it evaluates to true
-	// then rikaichan will not start looking for text in this text node
+	// then rikaisan will not start looking for text in this text node
 	// ignore text in RT elements
 	startElementExpr: 'boolean(parent::rp or ancestor::rt)',
 
@@ -649,7 +654,7 @@ var rcxContent = {
 	},
 		
 	processEntry: function(e) {
-		tdata = window.rikaichan;
+		tdata = window.rikaisan;
 		ro = lastRo;
 		selEndList = lastSelEnd;
 	
@@ -682,7 +687,7 @@ var rcxContent = {
 	},
 
 	processHtml: function(html) {
-		tdata = window.rikaichan;
+		tdata = window.rikaisan;
 		rcxContent.showPopup(html, tdata.prevTarget, tdata.popX, tdata.popY, false);
 		return 1;
 	},
@@ -761,7 +766,7 @@ var rcxContent = {
 	},
 	
 	processTitle: function(e) {
-		tdata = window.rikaichan;
+		tdata = window.rikaisan;
 		
 		if (!e) {
 			rcxContent.hidePopup();
@@ -846,9 +851,9 @@ var rcxContent = {
 				fake.scrollLeft = ev.target.scrollLeft;
 			}
 			
-			var tdata = window.rikaichan;	// per-tab data
+			var tdata = window.rikaisan;	// per-tab data
 			
-			var range = document.caretRangeFromPoint(ev.clientX, ev.clientY);
+			var range = document.caretPositionFromPoint(ev.clientX, ev.clientY);
 			var rp = range.startContainer;
 			var ro = range.startOffset;
 			
@@ -1018,28 +1023,32 @@ var rcxContent = {
 	}
 }
 
-//Event Listeners
-chrome.extension.onRequest.addListener(
-	function(request, sender, sendResponse) {
-		switch(request.type) {
-			case 'enable':
-				rcxContent.enableTab();
-				window.rikaichan.config = request.config;
-				console.log("enable");
-				break;
-			case 'disable':
-				rcxContent.disableTab();
-				console.log("disable");
-				break;
-			case 'showPopup':
-				console.log("showPopup");
-				rcxContent.showPopup(request.text);
-				break;
-			default:
-				console.log(request);
-		}
+function onMessage(event) {
+	var msg = event.data;
+
+	switch(msg.type) {
+		case 'enable':
+			rcxContent.enableTab();
+			window.rikaisan.config = msg.config;
+			console.log('enable');
+			break;
+		case 'disable':
+			rcxContent.disableTab();
+			console.log('disable');
+			break;
+		case 'showPopup':
+			console.log("showPopup");
+			//rcxContent.showPopup(msg.text);
+			break;
+		default:
+			console.log(msg);
 	}
-);
+}
 
 // When a page first loads, checks to see if it should enable script
-chrome.extension.sendRequest({"type":"enable?"});
+window.addEventListener('DOMContentLoaded', function() {
+	opera.extension.onmessage = onMessage;
+
+	opera.extension.postMessage({type:'tryEnable'});
+}, false);
+

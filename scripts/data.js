@@ -1,7 +1,12 @@
 ﻿/*
 
-	Rikaikun
-	Copyright (C) 2010 Erek Speed
+	Rikaisan
+	Copyright (C) 2012 Mathias Hällman
+
+	---
+
+	Originally based on Rikaikun 0.8.5
+	by Erek Speed
 	http://code.google.com/p/rikaikun/
 	
 	---
@@ -101,10 +106,10 @@ rcxDict.prototype = {
 	loadDictionary: function() {
 		/* this.wordDict = this.fileRead(rcxWordDict.datURI, rcxWordDict.datCharset);
 		this.wordIndex = this.fileRead(rcxWordDict.idxURI, rcxWordDict.idxCharset); */
-		this.wordDict = this.fileRead(chrome.extension.getURL("data/dict.dat"));
-		this.wordIndex = this.fileRead(chrome.extension.getURL("data/dict.idx"));
-		this.kanjiData = this.fileRead(chrome.extension.getURL("data/kanji.dat"), 'UTF-8');
-		this.radData = this.fileReadArray(chrome.extension.getURL("data/radicals.dat"), 'UTF-8'); 
+		this.wordDict = this.fileRead("data/dict.dat");
+		this.wordIndex = this.fileRead("data/dict.idx");
+		this.kanjiData = this.fileRead("data/kanji.dat", 'UTF-8');
+		this.radData = this.fileReadArray("data/radicals.dat", 'UTF-8'); 
 
 		//	this.test_kanji();
 	},
@@ -196,7 +201,7 @@ if (0) {
 		this.difRules = [];
 		this.difExact = [];
 
-		var buffer = this.fileReadArray(chrome.extension.getURL("data/deinflect.dat"), 'UTF-8');
+		var buffer = this.fileReadArray("data/deinflect.dat", 'UTF-8');
 		var prevLen = -1;
 		var g, o;
 

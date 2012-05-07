@@ -1,7 +1,12 @@
 ﻿/*
 
-	Rikaikun
-	Copyright (C) 2010 Erek Speed
+	Rikaisan
+	Copyright (C) 2012 Mathias Hällman
+
+	---
+
+	Originally based on Rikaikun 0.8.5
+	by Erek Speed
 	http://code.google.com/p/rikaikun/
 	
 	---
@@ -38,6 +43,7 @@
 	when modifying any of the files. - Jon
 
 */
+
 var rcxMain = {
 	haveNames: false,
 	canDoNames: false,
@@ -218,11 +224,11 @@ var rcxMain = {
 	// The callback for onSelectionChanged
 	// Just sends a message to the tab to enable itself if it hasn't
 	// already
-	onTabSelect: function(tabId) { rcxMain._onTabSelect(tabId); },
-	_onTabSelect: function(tabId) {
+	onTabSelect: function(tab) { //rcxMain._onTabSelect(tab); },
+	//_onTabSelect: function(tab) {
 
 		if ((this.enabled == 1))
-			chrome.tabs.sendRequest(tabId, {"type":"enable", "config":rcxMain.config});
+			tab.postMessage({type:'enable', config:rcxMain.config});
 	},
 
 /*
@@ -262,14 +268,17 @@ var rcxMain = {
 		}
 		
 		// Send message to current tab to add listeners and create stuff
-		chrome.tabs.sendRequest(tab.id, {"type":"enable", "config":rcxMain.config});
-		this.enabled = 1;
+		if(tab)
+		{
+			//tab.postMessage({type:'enable', config:rcxMain.config});
+			this.enabled = 1;
 		
-		if(mode == 1) {
-			chrome.tabs.sendRequest(tab.id, {"type":"showPopup", "text":rcxMain.miniHelp});
+			if(mode == 1) {
+			//	tab.postMessage({type:'showPopup', text:rcxMain.miniHelp});
+			}
 		} 
-		chrome.browserAction.setBadgeBackgroundColor({"color":[255,0,0,255]});
-		chrome.browserAction.setBadgeText({"text":"On"});
+		//chrome.browserAction.setBadgeBackgroundColor({"color":[255,0,0,255]});
+		//chrome.browserAction.setBadgeText({"text":"On"});
 	},
 
 	// This function diables 
@@ -278,11 +287,11 @@ var rcxMain = {
 		delete this.dict;
 		
 		this.enabled = 0;
-		chrome.browserAction.setBadgeBackgroundColor({"color":[0,0,0,0]});
-		chrome.browserAction.setBadgeText({"text":""});
+		//chrome.browserAction.setBadgeBackgroundColor({"color":[0,0,0,0]});
+		//chrome.browserAction.setBadgeText({"text":""});
 
 		// Send a disable message to all browsers
-		var windows = chrome.windows.getAll({"populate":true}, 
+/*		var windows = chrome.windows.getAll({"populate":true}, 
 			function(windows) {
 				for (var i =0; i < windows.length; ++i) {
 					var tabs = windows[i].tabs;
@@ -291,7 +300,7 @@ var rcxMain = {
 					}
 				}
 			});
-	},
+*/	},
 
 	inlineToggle: function(tab) {
 		if (rcxMain.enabled) rcxMain.inlineDisable(tab, 1);
@@ -349,3 +358,4 @@ p	FF00 - FFEF Halfwidth and Fullwidth Forms
 x	FF66 - FF9D	Katakana half-width
 
 */
+
