@@ -1,93 +1,59 @@
-window.addEventListener('load', function(){
-
-	//
-	// Set up message handler
-	//
-
-	function onMessage(event){
+window.addEventListener('load', function() {
+	opera.extension.onmessage = function(event) {
 		var msg = event.data;
 		var tab = event.source;
-	
-		switch(msg.type){
+
+		var response = null;
+
+		console.log(msg.type == null ? 'Unknown message' : msg.type +
+			' received in background.js');
+
+		switch (msg.type) {
 			case 'tryEnable':
-				console.log('tryEnable');
-				rcxMain.onTabSelect(tab);
+				Rikaisan.onTabSelect(tab);
 				break;
 			case 'xsearch':
-				console.log('xsearch');
-				var e = rcxMain.search(msg.text, msg.showmode);
-				tab.postMessage(e);
+				response = Rikaisan.search(msg.text, msg.showmode);
 				break;
 			case 'translate':
-				console.log('translate');
-				var e = rcxMain.dict.translate(msg.title);
-				tab.postMessage(e);
+				response = Rikaisan.translate(msg.title);
 				break;
 			case 'makehtml':
-				console.log('makehtml');
-				var html = rcxMain.dict.makeHtml(msg.entry);
-				tab.postMessage(html);
+				response = Rikaisan.makeHtml(msg.entry);
 				break;
 			default:
-				console.log(msg);
+				console.log('Message not handled.');
+				break;
+		}
+
+		if(response != null) {
+			tab.postMessage(response);
 		}
 	};
-
-	opera.extension.onmessage = onMessage;
-
-	//
-	// Attach button to UI
-	//
 
 	var UIItemProperties = {
 		disabled: true,
-		title: "rikaisan",
+		title: "Rikaisan",
 		icon: "images/button.png",
-		onclick: function(){ rcxMain.inlineToggle(opera.extension.tabs.getFocused()); }
+		onclick: function() {
+			Rikaisan.inlineToggle(opera.extension.tabs.getFocused());
+		}
 	};
 
-    var button = opera.contexts.toolbar.createItem(UIItemProperties);
-    opera.contexts.toolbar.addItem(button);
-    
-	function enableButton(){
-		var tab = opera.extension.tabs.getFocused();
-		if (tab) {
-			button.disabled = false;
-		} else {
-			button.disabled = true;
-		}
+	var button = opera.contexts.toolbar.createItem(UIItemProperties);
+
+	opera.contexts.toolbar.addItem(button);
+
+	function enableButton() {
+		button.disabled = opera.extension.tabs.getFocused() == null;
 	}
-	
+
 	opera.extension.onconnect = enableButton;
 	opera.extension.tabs.onfocus = enableButton;
 	opera.extension.tabs.onblur = enableButton;
 
-	opera.extension.tabs.addEventListener('focus', function(){
-		rcxMain.onTabSelect(opera.extension.tabs.getFocused());
+	opera.extension.tabs.addEventListener('focus', function() {
+		Rikaisan.onTabSelect(opera.extension.tabs.getFocused());
 	}, false);
-
-	//
-	// Set up Rikaisan instance
-	//
-
-	if(initStorage("v0.8.5", true)){
-		initStorage("popupcolor", "blue");
-		initStorage("highlight", "yes");
-		initStorage("textboxhl", "no");
-	}
-	
-	function initStorage(key, initialValue){ 
-	  var currentValue = localStorage[key]; 
-	  if (!currentValue) { 
-		localStorage[key] = initialValue; 
-		return true; 
-	  } 
-	  return false; 
-	}
-	
-	rcxMain.config = {};
-	rcxMain.config.css = localStorage["popupcolor"];
-	rcxMain.config.highlight = localStorage["highlight"];
-	rcxMain.config.textboxhl = localStorage["textboxhl"];;
 }, false);
 
