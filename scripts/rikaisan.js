@@ -95,16 +95,15 @@ var Rikaisan = new function() {
 			}
 		}
 
-		//chrome.browserAction.setBadgeBackgroundColor({"color":[255,0,0,255]});
-		//chrome.browserAction.setBadgeText({"text":"On"});
+		Button.setEnabled();
 	};
 
 	function _inlineDisable(tab, mode) {
 		delete _dict;
 
 		_enabled = false;
-		//chrome.browserAction.setBadgeBackgroundColor({"color":[0,0,0,0]});
-		//chrome.browserAction.setBadgeText({"text":""});
+
+		Button.setDisabled();
 
 		/*var windows = chrome.windows.getAll({"populate":true},
 			function(windows) {

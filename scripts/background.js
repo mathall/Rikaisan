@@ -31,27 +31,6 @@ window.addEventListener('load', function() {
 		}
 	};
 
-	var UIItemProperties = {
-		disabled: true,
-		title: "Rikaisan",
-		icon: "images/button.png",
-		onclick: function() {
-			Rikaisan.inlineToggle(opera.extension.tabs.getFocused());
-		}
-	};
-
-	var button = opera.contexts.toolbar.createItem(UIItemProperties);
-
-	opera.contexts.toolbar.addItem(button);
-
-	function enableButton() {
-		button.disabled = opera.extension.tabs.getFocused() == null;
-	}
-
-	opera.extension.onconnect = enableButton;
-	opera.extension.tabs.onfocus = enableButton;
-	opera.extension.tabs.onblur = enableButton;
-
 	opera.extension.tabs.addEventListener('focus', function() {
 		Rikaisan.onTabSelect(opera.extension.tabs.getFocused());
 	}, false);
