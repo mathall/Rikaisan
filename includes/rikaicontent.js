@@ -53,11 +53,11 @@ var rcxContent = {
 	enableTab: function() {
 		if (window.rikaisan == null) {
 			window.rikaisan = {};
-		//	window.addEventListener('mousemove', this.onMouseMove, false);
-		//	window.addEventListener('keydown', this.onKeyDown, true);
-		//	window.addEventListener('keyup', this.onKeyUp, true);
-		//	window.addEventListener('mousedown', this.onMouseDown, false);
-		//	window.addEventListener('mouseup', this.onMouseUp, false);
+			window.addEventListener('mousemove', this.onMouseMove, false);
+			window.addEventListener('keydown', this.onKeyDown, true);
+			window.addEventListener('keyup', this.onKeyUp, true);
+			window.addEventListener('mousedown', this.onMouseDown, false);
+			window.addEventListener('mouseup', this.onMouseUp, false);
 		}
 	},
 	
@@ -80,7 +80,7 @@ var rcxContent = {
 			delete window.rikaisan;
 		}
 	},
-	
+
 	getContentType: function(tDoc) {
 		var m = tDoc.getElementsByTagName('meta');
 		for(var i in m) {
@@ -93,26 +93,35 @@ var rcxContent = {
 		return null;
 	},
 
+	receiveCSS: function(css) {
+		var cssElem = document.getElementById('rikaisan-css');
+		if (cssElem) {
+			cssElem.textContent = css;
+		}
+	},
+
 	showPopup: function(text, elem, x, y, looseWidth) {
 		topdoc = window.document;
 
 		if ((isNaN(x)) || (isNaN(y))) x = y = 0;
 
+		var elemNS = 'http://www.w3.org/1999/xhtml';
 
 		var popup = topdoc.getElementById('rikaisan-window');
 		if (!popup) {
-			var css = topdoc.createElementNS('http://www.w3.org/1999/xhtml', 'link');
-			css.setAttribute('rel', 'stylesheet');
+			var css = topdoc.createElementNS(elemNS, 'style');
 			css.setAttribute('type', 'text/css');
-			var cssdoc = window.rikaisan.config.css;
-			css.setAttribute('href', chrome.extension.getURL('css/popup-' + 
-																cssdoc + '.css'));
 			css.setAttribute('id', 'rikaisan-css');
+
+			var cssDoc = 'css/popup-' + window.rikaisan.config.css + '.css';
+			opera.extension.postMessage({type:'requestCSS', doc:cssDoc});
+
 			topdoc.getElementsByTagName('head')[0].appendChild(css);
 
-			popup = topdoc.createElementNS('http://www.w3.org/1999/xhtml', 'div');
+			popup = topdoc.createElementNS(elemNS, 'div');
 			popup.setAttribute('id', 'rikaisan-window');
-			topdoc.documentElement.appendChild(popup);
+			topdoc.getElementsByTagName('body')[0].appendChild(popup);
+//documentElement.appendChild(popup);
 
 			popup.addEventListener('dblclick',
 				function (ev) {
@@ -134,7 +143,7 @@ var rcxContent = {
 
 		if (rcxContent.getContentType(topdoc) == 'text/plain') {
 			var df = document.createDocumentFragment();
-			df.appendChild(document.createElementNS('http://www.w3.org/1999/xhtml', 'span'));
+			df.appendChild(document.createElementNS(elemNS, 'span'));
 			df.firstChild.innerHTML = text;
 
 			while (popup.firstChild) {
@@ -352,10 +361,7 @@ var rcxContent = {
 		return text;
 	},
 */	
-	configPage: function() {
-		window.openDialog('chrome://rikaisan/content/prefs.xul', '', 'chrome,centerscreen');
-	},
-	
+
 	keysDown: [],
 
 	onKeyDown: function(ev) { rcxContent._onKeyDown(ev) },
@@ -540,7 +546,7 @@ var rcxContent = {
 			return node.data.substring(0, endIndex);
 		}
 
-		var result = xpathExpr.evaluate(node, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
+		var result = xpathExpr.evaluate(node, window.XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
 
 		while ((text.length < maxLength) && (node = result.iterateNext())) {
 			endIndex = Math.min(node.data.length, maxLength - text.length);
@@ -577,10 +583,11 @@ var rcxContent = {
 
 		var xpathExpr = rangeParent.ownerDocument.createExpression(this.textNodeExpr, null);
 
-		if (rangeParent.ownerDocument.evaluate(this.startElementExpr, rangeParent, null, XPathResult.BOOLEAN_TYPE, null).booleanValue)
+		if (rangeParent.ownerDocument.evaluate(this.startElementExpr,
+			rangeParent, null, window.XPathResult.BOOLEAN_TYPE, null).booleanValue)
 			return '';
 
-		if (rangeParent.nodeType != Node.TEXT_NODE)
+		if (rangeParent.nodeType != window.Node.TEXT_NODE)
 			return '';
 
 		endIndex = Math.min(rangeParent.data.length, offset + maxLength);
@@ -646,11 +653,9 @@ var rcxContent = {
 		
 		lastSelEnd = selEndList;
 		lastRo = ro;
-		chrome.extension.sendRequest({"type":"xsearch", "text":text, "showmode":this.showMode}, 
-		rcxContent.processEntry);
-		
+		opera.extension.postMessage({type:'xsearch', 'text':text, 'showmode':this.showMode});
+
 		return 1;
-		
 	},
 		
 	processEntry: function(e) {
@@ -683,7 +688,7 @@ var rcxContent = {
 			tdata.prevSelView = doc.defaultView;
 		}
 		
-		chrome.extension.sendRequest({"type":"makehtml", "entry":e}, rcxContent.processHtml);
+		opera.extension.postMessage({"type":"makehtml", "entry":e});
 	},
 
 	processHtml: function(html) {
@@ -761,8 +766,7 @@ var rcxContent = {
 	},
 
 	showTitle: function(tdata) {
-		chrome.extension.sendRequest({"type":"translate", "title":tdata.title}, 
-			rcxContent.processTitle);
+		opera.extension.postMessage({"type":"translate", "title":tdata.title});
 	},
 	
 	processTitle: function(e) {
@@ -778,7 +782,7 @@ var rcxContent = {
 
 		this.lastFound = [e];
 		
-		chrome.extension.sendRequest({"type":"makehtml", "entry":e}, rcxContent.processHtml);
+		opera.extension.postMessage({"type":"makehtml", "entry":e});
 	},
 /*
 	inRange: function (event) {
@@ -799,7 +803,7 @@ var rcxContent = {
 
 	getFirstTextChild: function(node) {
 		return document.evaluate('descendant::text()[not(parent::rp) and not(ancestor::rt)]',
-							node, null, XPathResult.ANY_TYPE, null).iterateNext();
+							node, null, window.XPathResult.ANY_TYPE, null).iterateNext();
 			//
 	},
 	
@@ -1038,7 +1042,19 @@ function onMessage(event) {
 			break;
 		case 'showPopup':
 			console.log("showPopup");
-			//rcxContent.showPopup(msg.text);
+			rcxContent.showPopup(msg.text);
+			break;
+		case 'receiveCSS':
+			rcxContent.receiveCSS(msg.css);
+			break;
+		case 'processEntry':
+			rcxContent.processEntry(msg.entry);
+			break;
+		case 'processHtml':
+			rcxContent.processHtml(msg.html);
+			break;
+		case 'processTitle':
+			rcxContent.processTitle(msg.title);
 			break;
 		default:
 			console.log(msg);
