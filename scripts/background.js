@@ -5,7 +5,7 @@ window.addEventListener('load', function() {
 
 		var response = null;
 
-		console.log(msg.type == null ? 'Unknown message' : msg.type +
+		console.log(msg.type ? msg.type : 'Unknown message' +
 			' received in background.js');
 
 		switch (msg.type) {
@@ -40,7 +40,7 @@ window.addEventListener('load', function() {
 				break;
 		}
 
-		if(response != null) {
+		if(response) {
 			tab.postMessage(response);
 		}
 	};
@@ -60,7 +60,7 @@ function doXHR(url, callback) {
 				callback(xhr.responseText);
 			}
 			else {
-				opera.postError('EXTENSION ERROR: Can\'t read ' + url);
+				opera.postError('Error reading ' + url);
 			}
 		}
 	};

@@ -8,7 +8,7 @@
 	Originally based on Rikaikun 0.8.5
 	by Erek Speed
 	http://code.google.com/p/rikaikun/
-	
+
 	---
 
 	Originally based on Rikaichan 1.07
@@ -57,11 +57,12 @@ var Rikaisan = new function() {
 	var _config = {};
 
 	var _miniHelp = (
-		'<span style="font-weight:bold">Rikaikun enabled!</span><br><br>' +
+		'<span style="font-weight:bold">Rikaisan enabled!</span><br><br>' +
 		'<table cellspacing=5>' +
 		'<tr><td>A</td><td>Alternate popup location</td></tr>' +
 		'<tr><td>Y</td><td>Move popup location down</td></tr>' +
-		'<tr><td>Shift/Enter&nbsp;&nbsp;</td><td>Switch dictionaries</td></tr>' +
+		'<tr><td>Shift/Enter&nbsp;&nbsp;</td>' +
+			'<td>Switch dictionaries</td></tr>' +
 		'<tr><td>B</td><td>Previous character</td></tr>' +
 		'<tr><td>M</td><td>Next character</td></tr>' +
 		'<tr><td>N</td><td>Next word</td></tr>' +
@@ -74,11 +75,10 @@ var Rikaisan = new function() {
 				_dict = new rcxDict(false);
 			}
 			catch (e) {
-				alert('Error loading dictionary: ' + e);
-				return false;
+				opera.postError('Error loading dictionary: ' + e);
 			}
 		}
-		return true;
+		return _dict != null;
 	};
 
 	function _inlineEnable(tab, mode) {
@@ -105,15 +105,13 @@ var Rikaisan = new function() {
 
 		Button.setDisabled();
 
-		/*var windows = chrome.windows.getAll({"populate":true},
-			function(windows) {
-				for (var i =0; i < windows.length; ++i) {
-					var tabs = windows[i].tabs;
-					for ( var j = 0; j < tabs.length; ++j) {
-						chrome.tabs.sendRequest(tabs[j].id, {"type":"disable"});
-					}
-				}
-			});*/
+		var windows = opera.extension.windows.getAll();
+		for (var w in windows) {
+			var tabs = windows[w].tabs.getAll();
+			for (var t in tabs) {
+				tabs[t].postMessage({type:'disable'});
+			}
+		}
 	};
 
 	function _onTabSelect(tab) {
@@ -137,22 +135,22 @@ var Rikaisan = new function() {
 
 		do {
 			switch (showMode) {
-			case ShowMode.WORDS:
-				entry = _dict.wordSearch(text, false);
-				break;
-			case ShowMode.KANJI:
-				entry = _dict.kanjiSearch(text.charAt(0));
-				break;
-			case ShowMode.NAMES:
-				entry = _dict.wordSearch(text, true);
-				break;
+				case ShowMode.WORDS:
+					entry = _dict.wordSearch(text, false);
+					break;
+				case ShowMode.KANJI:
+					entry = _dict.kanjiSearch(text.charAt(0));
+					break;
+				case ShowMode.NAMES:
+					entry = _dict.wordSearch(text, true);
+					break;
 			}
 			if (entry) {
 				break;
 			}
 			showMode = (showMode + 1) % ShowMode.COUNT;
 		} while (showMode != m);
-		
+
 		return entry;
 	};
 
