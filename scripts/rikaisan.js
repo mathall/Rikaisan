@@ -54,7 +54,6 @@ var Rikaisan = new function() {
 
 	var _enabled = false;
 	var _dict = null;
-	var _config = {};
 
 	var _miniHelp = (
 		'<span style="font-weight:bold">Rikaisan enabled!</span><br><br>' +
@@ -87,8 +86,9 @@ var Rikaisan = new function() {
 		}
 
 		if (tab) {
-			tab.postMessage({type:'enable', config:_config});
 			_enabled = true;
+
+			_tryEnableTab(tab);
 
 			if (mode == ShowMode.KANJI) {
 				tab.postMessage({type:'showPopup', text:_miniHelp});
@@ -114,9 +114,13 @@ var Rikaisan = new function() {
 		}
 	};
 
-	function _onTabSelect(tab) {
+	function _tryEnableTab(tab) {
 		if (_enabled) {
-			tab.postMessage({type:'enable', config:_config});
+			tab.postMessage({type:'enable', config:{
+				css: widget.preferences['popupcolor'],
+				highlight: widget.preferences['highlight'],
+				textboxhl: widget.preferences['textboxhl']
+			}});
 		}
 	};
 
@@ -162,27 +166,8 @@ var Rikaisan = new function() {
 		return _dict ? _dict.makeHtml(entry) : null;
 	};
 
-	if(_initStorage("v0.0.1", true)) {
-		_initStorage("popupcolor", "blue");
-		_initStorage("highlight", "yes");
-		_initStorage("textboxhl", "no");
-	}
-
-	function _initStorage(key, initialValue) {
-		var currentValue = localStorage[key];
-		if (!currentValue) {
-			localStorage[key] = initialValue;
-			return true;
-		}
-		return false;
-	}
-
-	_config.css = localStorage["popupcolor"];
-	_config.highlight = localStorage["highlight"];
-	_config.textboxhl = localStorage["textboxhl"];
-
 	var _this = {
-		onTabSelect: function(tab) { _onTabSelect(tab); },
+		onTabSelect: function(tab) { _tryEnableTab(tab); },
 		inlineToggle: function(tab) { _inlineToggle(tab); },
 		search: function(text, showMode) { return _search(text, showMode); },
 		translate: function(title) { return _translate(title); },

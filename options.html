@@ -1,72 +1,68 @@
- <html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<link rel="stylesheet" type="text/css" href="css/options.css" />
-	<script>
-		function fillVals() {
-			var store = localStorage['popupcolor'];
-			for(var i=0; i < document.optform.popupcolor.length; ++i) {
-				if(document.optform.popupcolor[i].value == store) {
-					document.optform.popupcolor[i].selected = true;
-					break;
-				}
-			}
-			store = localStorage['highlight'];
-			if(store == 'yes') {
-				document.optform.highlighttext[0].selected = true;
-			}
-			else
-				document.optform.highlighttext[1].selected = true;
-				
-			store = localStorage['textboxhl'];
-			if(store == 'yes')
-				document.optform.textboxhl[0].selected = true;
-			else
-				document.optform.textboxhl[1].selected = true;
-		}
-		
-		function getVals() {
-			localStorage['popupcolor'] = document.optform.popupcolor.value;
-			localStorage['highlight'] = document.optform.highlighttext.value;
-			localStorage['textboxhl'] = document.optform.textboxhl.value;
-			chrome.extension.getBackgroundPage().rcxMain.config.css = localStorage["popupcolor"];
-			chrome.extension.getBackgroundPage().rcxMain.config.highlight = localStorage["highlight"];
-			chrome.extension.getBackgroundPage().rcxMain.config.textboxhl = localStorage["textboxhl"];
-		}
-		window.onload = fillVals;
-	</script>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="css/options.css" />
+<title>Rikaisan - options</title>
+<script>
+
+window.addEventListener( 'DOMContentLoaded', function() {
+	var popupColor = document.getElementById('popupcolor');
+	var highlight = document.getElementById('highlight');
+	var textboxhl = document.getElementById('textboxhl');
+
+	popupColor.addEventListener('change', function() {
+		widget.preferences['popupcolor'] = this.value;
+	}, false );
+
+	highlight.addEventListener('change', function() {
+		widget.preferences['highlight'] = this.value;
+	}, false );
+
+	textboxhl.addEventListener('change', function() {
+		widget.preferences['textboxhl'] = this.value;
+	}, false );
+
+	popupColor.value = widget.preferences['popupcolor'];
+	highlight.value = widget.preferences['highlight'];
+	textboxhl.value = widget.preferences['textboxhl'];
+}, false);
+</script>
 </head>
-	<body>
-		<div id="rikaikun_options">
-			<div id="tabs">
-				<div id="general" class="tab active-tab">General</div><div id="keyboard" class="tab">Keyboard</div><div id="worddict" class="tab">Word Dictionary</div><div id="kanjidict" class="tab">Kanji Dictionary</div><div id="namedict" class="tab">Names Dictionary</div><div id="clipboard" class="tab">Clipboard</div>
-			</div>
-			<div id="options">
-				<form id="optform" name="optform">
-					<div id="gencon">
-						<p>Popup color:
-							<select id="popupcolor" name="popupcolor">
-								<option value="blue">Blue</option>
-								<option value="lightblue">Light Blue</option>
-								<option value="black">Black</option>
-								<option value="yellow">Yellow</option>
-							</select>
-							<br />
-							Highlight text?
-							<select id="highlighttext" name="highlighttext">
-								<option value="yes">Yes</option>
-								<option value="no">No</option>
-							</select>
-							<br />
-							Highlight text inside of text boxes?
-							<select id="textboxhl" name="textboxhl">
-								<option value="yes">Yes</option>
-								<option value="no">No</option>
-							</select>
-							</p>
-						<p><input type="submit" onClick="getVals()" value="Submit" /></p>
-					</div>
-				</form>
-			</div>
-		</div>
-	</body>
+<body>
+
+<div id="options">
+<form id="optform" name="optform">
+
+<ul>
+	<li>
+	<label for="popupcolor">Popup color:</label>
+	<select name="popupcolor" id="popupcolor">
+		<option value="blue">Blue</option>
+		<option value="lightblue">Light Blue</option>
+		<option value="black">Black</option>
+		<option value="yellow">Yellow</option>
+	</select>
+	</li>
+	<li>
+	<label for="highlight">Highlight text?</label>
+	<select name="highlight" id="highlight">
+		<option value="yes">Yes</option>
+		<option value="no">No</option>
+	</select>
+	</li>
+	<li>
+	<label for="textboxhl">Highlight text inside of text boxes?</label>
+	<select name="textboxhl" id="textboxhl">
+		<option value="yes">Yes</option>
+		<option value="no">No</option>
+	</select>
+	</li>
+</ul>
+
+</form>
+</div>
+
+</body>
 </html>
+
