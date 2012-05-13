@@ -88,9 +88,9 @@ var Rikaisan = new function() {
 		if (tab) {
 			_enabled = true;
 
-			_tryEnableTab(tab);
+			var tabEnabled = _tryEnableTab(tab);
 
-			if (mode == ShowMode.KANJI) {
+			if (tabEnabled && mode == ShowMode.KANJI) {
 				tab.postMessage({type:'showPopup', text:_miniHelp});
 			}
 		}
@@ -109,13 +109,22 @@ var Rikaisan = new function() {
 	};
 
 	function _tryEnableTab(tab) {
+		var success = true;
+
 		if (_enabled) {
-			tab.postMessage({type:'enable', config:{
-				css: widget.preferences['popupcolor'],
-				highlight: widget.preferences['highlight'],
-				textboxhl: widget.preferences['textboxhl']
-			}});
+			try {
+				tab.postMessage({type:'enable', config:{
+					css: widget.preferences['popupcolor'],
+					highlight: widget.preferences['highlight'],
+					textboxhl: widget.preferences['textboxhl']
+				}});
+			}
+			catch (e) {
+				success = false;
+			}
 		}
+
+		return success;
 	};
 
 	function _inlineToggle(tab) {
