@@ -131,11 +131,11 @@ var RsContent = new function() {
 			var elem = null;
 
 			if (elem = document.getElementById('rikaisan-css')) {
-				elem.parentNode.removeChild(e);
+				elem.parentNode.removeChild(elem);
 			}
 
 			if (elem = document.getElementById('rikaisan-window')) {
-				elem.parentNode.removeChild(e);
+				elem.parentNode.removeChild(elem);
 			}
 
 			_clearHi();
@@ -1017,7 +1017,7 @@ window.addEventListener('DOMContentLoaded', function() {
 	opera.extension.onmessage = function(event) {
 		var msg = event.data;
 
-		console.log(msg.type ? msg.type : 'Unknown message' +
+		console.log((msg.type ? msg.type : 'Unknown message') +
 			' received in rikaicontent.js');
 
 		switch(msg.type) {

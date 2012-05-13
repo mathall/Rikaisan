@@ -98,20 +98,14 @@ var Rikaisan = new function() {
 		Button.setEnabled();
 	};
 
-	function _inlineDisable(tab, mode) {
+	function _inlineDisable(tab) {
 		delete _dict;
 
 		_enabled = false;
 
 		Button.setDisabled();
 
-		var windows = opera.extension.windows.getAll();
-		for (var w in windows) {
-			var tabs = windows[w].tabs.getAll();
-			for (var t in tabs) {
-				tabs[t].postMessage({type:'disable'});
-			}
-		}
+		opera.extension.broadcastMessage({type:'disable'});
 	};
 
 	function _tryEnableTab(tab) {
@@ -126,7 +120,7 @@ var Rikaisan = new function() {
 
 	function _inlineToggle(tab) {
 		if (_enabled) {
-			_inlineDisable(tab, ShowMode.KANJI);
+			_inlineDisable(tab);
 		}
 		else {
 			_inlineEnable(tab, ShowMode.KANJI);

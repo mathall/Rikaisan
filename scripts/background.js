@@ -5,7 +5,7 @@ window.addEventListener('load', function() {
 
 		var response = null;
 
-		console.log(msg.type ? msg.type : 'Unknown message' +
+		console.log((msg.type ? msg.type : 'Unknown message') +
 			' received in background.js');
 
 		switch (msg.type) {
