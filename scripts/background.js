@@ -40,7 +40,7 @@ window.addEventListener('load', function() {
 				break;
 		}
 
-		if(response) {
+		if (response) {
 			tab.postMessage(response);
 		}
 	};

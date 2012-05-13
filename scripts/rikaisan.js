@@ -86,11 +86,11 @@ var Rikaisan = new function() {
 			return;
 		}
 
-		if(tab) {
+		if (tab) {
 			tab.postMessage({type:'enable', config:_config});
 			_enabled = true;
 
-			if(mode == ShowMode.KANJI) {
+			if (mode == ShowMode.KANJI) {
 				tab.postMessage({type:'showPopup', text:_miniHelp});
 			}
 		}
@@ -181,12 +181,14 @@ var Rikaisan = new function() {
 	_config.highlight = localStorage["highlight"];
 	_config.textboxhl = localStorage["textboxhl"];
 
-	return {
+	var _this = {
 		onTabSelect: function(tab) { _onTabSelect(tab); },
 		inlineToggle: function(tab) { _inlineToggle(tab); },
 		search: function(text, showMode) { return _search(text, showMode); },
 		translate: function(title) { return _translate(title); },
 		makeHtml: function(entry) { return _makeHtml(entry); }
 	};
+
+	return _this;
 };
 
