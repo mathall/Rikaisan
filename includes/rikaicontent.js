@@ -759,7 +759,7 @@ var RsContent = new function() {
 			case 78:	// n
 				for (i = 50; i > 0; --i) {
 					ev.currentTarget.rikaisan.uofs +=
-						ev.currentTarget.rikaichan.uofsNext;
+						ev.currentTarget.rikaisan.uofsNext;
 					_showMode = ShowMode.WORDS;
 					if (_show(ev.currentTarget.rikaisan) >= 0) {
 						break;
