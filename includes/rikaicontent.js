@@ -694,8 +694,8 @@ var RsContent = new function() {
 		fake.scrollLeft = real.scrollLeft;
 		fake.style.position = "absolute";
 		fake.style.zIndex = 7777;
-		$(fake).offset(
-			{top: $(real).offset().top, left:$(real).offset().left});
+		fake.offsetLeft = real.offsetLeft;
+		fake.offsetTop = real.offsetTop;
 
 		return fake;
 	};
