@@ -49,7 +49,7 @@ var Rikaisan = new function() {
 		WORDS	:0,
 		KANJI	:1,
 		NAMES	:2,
-		COUNT	:3,
+		COUNT	:2, // names search is not really supported yet
 	};
 
 	var _enabled = false;

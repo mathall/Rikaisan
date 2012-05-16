@@ -5,8 +5,8 @@ window.addEventListener('load', function() {
 
 		var response = null;
 
-		console.log((msg.type ? msg.type : 'Unknown message') +
-			' received in background.js');
+		//console.log((msg.type ? msg.type : 'Unknown message') +
+			//' received in background.js');
 
 		switch (msg.type) {
 			case 'tryEnable':
@@ -36,7 +36,7 @@ window.addEventListener('load', function() {
 				});
 				break;
 			default:
-				console.log('Message not handled.');
+				//console.log('Message not handled.');
 				break;
 		}
 

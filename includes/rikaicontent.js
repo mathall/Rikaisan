@@ -49,7 +49,7 @@ var RsContent = new function() {
 		WORDS	:0,
 		KANJI	:1,
 		NAMES	:2,
-		COUNT	:3,
+		COUNT	:2, // names search is not really supported yet
 	};
 
 	var _showMode = ShowMode.KANJI;
@@ -377,6 +377,11 @@ var RsContent = new function() {
 	};
 
 	function _isInline(node) {
+		// I don't even know
+		if (node.nodeType == 3) {
+			return true;
+		}
+
 		var computedStyle = document.defaultView.getComputedStyle(node, null);
 		var display = computedStyle.getPropertyValue('display');
 
@@ -405,7 +410,7 @@ var RsContent = new function() {
 		var result = xpathExpr.evaluate(node,
 			window.XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
 
-		while (text.length < maxLength && node = result.iterateNext()) {
+		while (text.length < maxLength && (node = result.iterateNext())) {
 			endIndex = Math.min(node.data.length, maxLength - text.length);
 			text += node.data.substring(0, endIndex);
 			selEndList.push({node: node, offset: endIndex});
@@ -638,6 +643,7 @@ var RsContent = new function() {
 		}
 
 		var range = doc.createRange();
+
 		range.setStart(rp, ro);
 		range.setEnd(selEnd.node, offset);
 
@@ -1017,8 +1023,8 @@ window.addEventListener('DOMContentLoaded', function() {
 	opera.extension.onmessage = function(event) {
 		var msg = event.data;
 
-		console.log((msg.type ? msg.type : 'Unknown message') +
-			' received in rikaicontent.js');
+		//console.log((msg.type ? msg.type : 'Unknown message') +
+			//' received in rikaicontent.js');
 
 		switch(msg.type) {
 			case 'enable':
@@ -1043,7 +1049,7 @@ window.addEventListener('DOMContentLoaded', function() {
 				RsContent.processTitle(msg.title);
 				break;
 			default:
-				console.log('Message not handled.');
+				//console.log('Message not handled.');
 				break;
 		}
 	};
