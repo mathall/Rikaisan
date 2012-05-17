@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<widget xmlns="http://www.w3.org/ns/widgets" id="url-maybe" version="0.0.1">
-	<name>Rikaisan</name>
-	<author href="urk">Mathias Hällman</author>
-	<description>A port of rikaikun for Opera. Translate Japanese by hovering over words.</description>
-	<icon src="images/icon_64.png" width="64" height="64"/>
-	<icon src="images/icon_18.png" width="18" height="18"/>
-	<preference name="popupcolor" value="blue" readonly="false"/>
-	<preference name="highlight" value="yes" readonly="false"/>
-	<preference name="textboxhl" value="no" readonly="false"/>
+<widget xmlns="http://www.w3.org/ns/widgets" id="http://mathall.github.com/Rikaisan/" version="0.1">
+<name>Rikaisan</name>
+<author href="https://github.com/mathall" email="mathias87@gmail.com">Mathias Hällman</author>
+<description xml:lang="en">A port of rikaikun for Opera. Translate Japanese by hovering over words.</description>
+<icon src="images/icon_64.png" width="64" height="64"/>
+<icon src="images/icon_18.png" width="18" height="18"/>
+<preference name="popupcolor" value="blue" readonly="false"/>
+<preference name="highlight" value="yes" readonly="false"/>
+<preference name="textboxhl" value="no" readonly="false"/>
 </widget>
 
